@@ -12,25 +12,25 @@ sudo apt install -y gcc make gdb binutils python3 python3-pip python3-venv check
 pip install pwntools
 ```
 
-## Safety Boundaries & ASLR
+## ASLR
 
 To ensure the exploits work reliably during the live demonstration, we will disable Address Space Layout Randomization (ASLR) **only for the target process**, rather than disabling it system-wide.
 
 Use the `setarch` command to run a program with ASLR disabled:
 
 ```bash
-setarch `uname -m` -R ./vulnerable-binary
+setarch $(uname -m) -R ./vulnerable-binary
 ```
 
 Or when running exploit scripts:
 
 ```bash
-setarch `uname -m` -R python3 exploit.py
+setarch $(uname -m) -R python3 exploit.py
 ```
 
 The exploit scripts provided in this workshop will automatically handle this if they spawn the process using `pwntools` with the correct settings, but it's important to understand the mechanism.
 
-## Mitigation Narrative
+## Mitigations
 
 Throughout the workshop, we will explore the following mitigations:
 
