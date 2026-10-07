@@ -2,36 +2,63 @@
 """Force check_password to fall through to `return 1`."""
 
 import pathlib
-import subprocess
 import sys
+
+from capstone import CS_ARCH_X86, CS_MODE_64, Cs
+from elftools.elf.elffile import ELFFile
+from elftools.elf.sections import SymbolTableSection
 
 # jne +7; mov eax, 1    ->    nop; nop; mov eax, 1
 FAIL_BRANCH = bytes.fromhex("75 07 b8 01 00 00 00")
 ALWAYS_GRANT = bytes.fromhex("90 90 b8 01 00 00 00")
 
 
-def function_offset(path, name):
-    dump = subprocess.check_output(["objdump", "-d", "-F", path], text=True)
-    needle = f"<{name}> (File Offset: "
-    for line in dump.splitlines():
-        if needle in line:
-            return int(line.split(needle, 1)[1].split(")", 1)[0], 16)
+def load_function(path, name):
+    """Return (va, file_offset, bytes) for a named ELF symbol."""
+    with open(path, "rb") as f:
+        elf = ELFFile(f)
+        for section in elf.iter_sections():
+            if not isinstance(section, SymbolTableSection):
+                continue
+            for sym in section.iter_symbols():
+                if sym.name != name or not sym["st_size"]:
+                    continue
+                va = sym["st_value"]
+                for seg in elf.iter_segments():
+                    if seg["p_type"] != "PT_LOAD":
+                        continue
+                    start = seg["p_vaddr"]
+                    if start <= va < start + seg["p_filesz"]:
+                        offset = seg["p_offset"] + (va - start)
+                        f.seek(offset)
+                        return va, offset, f.read(sym["st_size"])
     raise SystemExit(f"could not find {name}")
+
+
+def dump_function(label, va, code):
+    print(f"{label}  check_password @ {va:#x}")
+    md = Cs(CS_ARCH_X86, CS_MODE_64)
+    for insn in md.disasm(code, va):
+        mark = "  <- patch this jne" if insn.bytes[:1] == b"\x75" else ""
+        print(f"  {insn.address:#010x}  {insn.bytes.hex(' '):<20} {insn.mnemonic} {insn.op_str}{mark}")
+    print()
 
 
 def main():
     src = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "patch-branch")
     dst = pathlib.Path(sys.argv[2] if len(sys.argv) > 2 else "patch-branch.patched")
     blob = bytearray(src.read_bytes())
-    start = function_offset(src, "check_password")
-    end = function_offset(src, "main")
-    window = blob[start:end]
-    at = window.find(FAIL_BRANCH)
+    va, start, code = load_function(src, "check_password")
+    dump_function(str(src), va, code)
+
+    at = code.find(FAIL_BRANCH)
     if at < 0:
         raise SystemExit("password branch not found; rebuild with the lab makefile")
     blob[start + at : start + at + len(ALWAYS_GRANT)] = ALWAYS_GRANT
     dst.write_bytes(blob)
     dst.chmod(0o755)
+
+    dump_function(str(dst), va, bytes(blob[start : start + len(code)]))
     print(f"patched {src} -> {dst} at file offset {start + at:#x}")
     print("the conditional jump is now two NOPs, so a wrong password still returns 1")
 

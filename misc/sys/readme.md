@@ -1,4 +1,4 @@
-# Workshop Setup Instructions
+# System Security
 
 This workshop assumes an x86-64 Ubuntu/Debian environment.
 
@@ -9,7 +9,7 @@ Install the required tools:
 ```bash
 sudo apt update
 sudo apt install -y gcc make gdb binutils python3 python3-pip python3-venv checksec
-pip install pwntools
+pip install pwntools pyelftools capstone
 ```
 
 ## ASLR

@@ -19,16 +19,11 @@ mov    eax, 0
    ```bash
    make 12-patch-branch
    ```
-2. Show the branch:
-   ```bash
-   objdump -d -M intel patch-branch | sed -n '/<check_password>:/,/^$/p'
-   ```
-3. Confirm a wrong password is rejected, then patch and try the same input:
+2. Confirm a wrong password is rejected, then patch. `patch.py` prints `check_password` before and after:
    ```bash
    printf 'nope\n' | ./patch-branch
    python3 patch.py patch-branch patch-branch.patched
    printf 'nope\n' | ./patch-branch.patched
-   objdump -d -M intel patch-branch.patched | sed -n '/<check_password>:/,/^$/p'
    ```
 
 Next lab adds checks that refuse to run while a debugger is attached. Those checks are patched the same way.

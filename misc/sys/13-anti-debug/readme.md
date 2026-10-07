@@ -31,9 +31,8 @@ Presenter password: `firmware-admin`
    gdb -batch -ex 'set pagination off' -ex 'run' -ex 'quit' --args ./anti-debug <<< 'firmware-admin'
    ```
    *The second command prints `Debugger detected` and never grants access.*
-3. Disassemble both checks, patch them, and repeat the GDB run:
+3. Patch both checks. `patch.py` prints each function before and after:
    ```bash
-   objdump -d -M intel anti-debug | sed -n '/<ptrace_blocked>:/,/^$/p'
    python3 patch.py anti-debug anti-debug.patched
    gdb -batch -ex 'set pagination off' -ex 'run' -ex 'quit' --args ./anti-debug.patched <<< 'firmware-admin'
    ```

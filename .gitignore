@@ -1,0 +1,31 @@
+# Build outputs
+misc/sys/**/system-monitor
+misc/sys/**/auth-bypass
+misc/sys/**/firmware-update
+misc/sys/**/sensor-parser
+misc/sys/**/log-service
+misc/sys/**/web-server
+misc/sys/**/session-manager
+misc/sys/**/vuln-*
+misc/sys/**/secure
+misc/sys/**/plaintext-password
+misc/sys/**/hashed-password
+misc/sys/**/patch-branch
+misc/sys/**/anti-debug
+misc/sys/**/integrity-check
+misc/sys/**/*.patched
+misc/sys/**/*.branch
+misc/sys/**/*.both
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Core dumps and editor junk
+core
+core.*
+*.swp
+*~
+.DS_Store

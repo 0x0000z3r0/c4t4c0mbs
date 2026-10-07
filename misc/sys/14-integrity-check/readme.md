@@ -14,7 +14,7 @@ The source initializes that global to the marker `0xc0ffee42`. `make` runs `stam
   ```bash
    printf 'nope\n' | ./integrity-check
   ```
-3. Patch only the branch. Startup now fails:
+3. Patch only the branch. `patch.py` prints `check_password` before and after. Startup now fails:
   ```bash
    python3 patch.py integrity-check branch integrity-check.branch
    ./integrity-check.branch
