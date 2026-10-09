@@ -16,6 +16,12 @@ misc/sys/**/integrity-check
 misc/sys/**/*.patched
 misc/sys/**/*.branch
 misc/sys/**/*.both
+misc/net/**/proxy
+misc/net/**/proxy_out.txt
+
+
+misc/net/**/test_*
+!misc/net/**/test_*.c
 
 # Python
 __pycache__/

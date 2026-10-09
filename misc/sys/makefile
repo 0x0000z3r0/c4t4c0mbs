@@ -55,7 +55,6 @@ all: 01-system-monitor 02-auth-bypass 03-firmware 04-sensor 05-log-fmt 06-http-r
 
 14-integrity:
 	$(CC) $(CFLAGS_RE) 14-integrity-check/main.c -o 14-integrity-check/integrity-check
-	python3 14-integrity-check/stamp.py 14-integrity-check/integrity-check
 
 clean:
 	rm -f 01-system-monitor-elf/system-monitor \
