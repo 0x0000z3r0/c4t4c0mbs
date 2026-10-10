@@ -23,6 +23,7 @@ Run one sample in the foreground, then run that sample's `exploit.py` from anoth
 ```bash
 cmake --build build --target run-01-freertos-overflow
 cmake --build build --target run-02-executable-stack
+cmake --build build --target run-03-toctou
 ```
 
 Only one sample can own `127.0.0.1:8888` at a time.

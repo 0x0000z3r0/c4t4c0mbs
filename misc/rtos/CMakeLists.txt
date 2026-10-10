@@ -124,3 +124,4 @@ endfunction()
 
 add_rtos_sample(01-freertos-overflow)
 add_rtos_sample(02-executable-stack)
+add_rtos_sample(03-toctou)
