@@ -1,0 +1,7 @@
+[submodule "misc/rtos/FreeRTOS-Kernel"]
+	path = misc/rtos/FreeRTOS-Kernel
+	url = https://github.com/FreeRTOS/FreeRTOS-Kernel.git
+	branch = main
+[submodule "misc/rtos/FreeRTOS-Plus-TCP"]
+	path = misc/rtos/FreeRTOS-Plus-TCP
+	url = https://github.com/FreeRTOS/FreeRTOS-Plus-TCP.git

@@ -18,6 +18,9 @@ misc/sys/**/*.branch
 misc/sys/**/*.both
 misc/net/**/proxy
 misc/net/**/proxy_out.txt
+misc/rtos/**/*.o
+misc/rtos/**/*.elf
+misc/rtos/**/qemu_out.txt
 
 
 misc/net/**/test_*

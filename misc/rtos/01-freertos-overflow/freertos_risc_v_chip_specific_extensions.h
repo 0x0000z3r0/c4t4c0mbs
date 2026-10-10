@@ -1,0 +1,15 @@
+#ifndef FREERTOS_RISC_V_CHIP_SPECIFIC_EXTENSIONS_H
+#define FREERTOS_RISC_V_CHIP_SPECIFIC_EXTENSIONS_H
+
+/* No chip specific extensions for standard QEMU virt RV32I */
+#define portasmHAS_SIFIVE_CLIC 0
+#define portasmHAS_MTIME 1
+#define portasmADDITIONAL_CONTEXT_SIZE 0
+
+.macro portasmSAVE_ADDITIONAL_REGISTERS
+.endm
+
+.macro portasmRESTORE_ADDITIONAL_REGISTERS
+.endm
+
+#endif /* FREERTOS_RISC_V_CHIP_SPECIFIC_EXTENSIONS_H */

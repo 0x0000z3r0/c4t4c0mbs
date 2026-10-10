@@ -97,7 +97,7 @@ process_packet(char *buffer, int recv_len)
 		}
 
 		if (inner_len >= 8 && strncmp(payload_buffer, "secret12", 8) == 0) {
-			printf("[+] Session %u authenticated successfully!\n", session_id);
+			printf("[+] Session %u authenticated successfully\n", session_id);
 			current_session.state = STATE_AUTHED;
 		} else {
 			log_error("Auth failed: Incorrect password");
@@ -124,19 +124,15 @@ process_packet(char *buffer, int recv_len)
 }
 
 int
-main()
+main(void)
 {
-	int sockfd;
-	struct sockaddr_in server_addr, client_addr;
-	char buffer[2048];
-	socklen_t client_len = sizeof(client_addr);
-
-	sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+	int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sockfd < 0) {
 		perror("Socket creation failed");
 		exit(1);
 	}
 
+	struct sockaddr_in server_addr;
 	memset(&server_addr, 0, sizeof(server_addr));
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr = INADDR_ANY;
@@ -149,10 +145,13 @@ main()
 
 	printf("[*] Secure Proxy listening on UDP port %d...\n", PORT);
 
+	struct sockaddr_in client_addr;
+	char buffer[2048];
+	socklen_t client_len = sizeof(client_addr);
 	while (1) {
-		int n = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *)&client_addr, &client_len);
-		if (n > 0) {
-			process_packet(buffer, n);
+		int bytes = recvfrom(sockfd, buffer, sizeof(buffer), 0, (struct sockaddr *)&client_addr, &client_len);
+		if (bytes > 0) {
+			process_packet(buffer, bytes);
 		}
 	}
 
