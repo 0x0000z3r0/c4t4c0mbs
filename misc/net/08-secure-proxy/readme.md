@@ -1,4 +1,4 @@
-# Lab 08: Secure Proxy
+# Secure Proxy
 
 ## **Mitigations Implemented:**
 

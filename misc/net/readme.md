@@ -17,6 +17,34 @@ struct proxy_header {
 };
 ```
 
+## Dependencies
+
+```shell
+sudo apt-get install -y build-essential libssl-dev
+pip install pwntools scapy
+```
+
+Labs 09–13 link OpenSSL (`-lcrypto`). Labs 09–12 wrap AES-128-CTR in a helper, and later labs add a tag. Lab 13 uses AES-128-GCM with a unique nonce and a tag over the header and ciphertext, then overflows a stack buffer with that authenticated plaintext. The program is a UDP tunnel:
+
+```shell
+./proxy wrap 127.0.0.1 7777 127.0.0.1 8888
+./proxy unwrap 127.0.0.1 8888 127.0.0.1 9999
+```
+
+`wrap` accepts plaintext on `127.0.0.1:7777` and sends an encrypted frame to `127.0.0.1:8888`. `unwrap` accepts that frame on `127.0.0.1:8888` and forwards the plaintext to `127.0.0.1:9999`.
+
+Send a command with netcat. `printf` does not append a newline:
+
+```shell
+printf 'STATUS' | nc -u -w1 127.0.0.1 7777
+```
+
+Each lab's `exploit.py` sniffs that encrypted datagram on the loopback interface and injects a modified copy to unwrap. Sniffing needs raw sockets, so run it with `sudo`. Start the sniffer before the `printf`.
+
+```shell
+tshark -i lo -f "udp port 8888" -x
+```
+
 ## Setup
 
 1. Navigate to the specific lab directory.
