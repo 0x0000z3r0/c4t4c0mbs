@@ -6,7 +6,7 @@
 #define UART0_BASE 0x10000000UL
 
 // QEMU 6.2 virt has only one MMIO 16550 (UART0). A second -serial flag does
-// not create UART1 at 0x10000100 — that address is unmapped and faults.
+// not create UART1 at 0x10000100, that address is unmapped and faults.
 // UART1 is a pci-serial 16550, mapped into the virt PCI IO window.
 #define PCI_ECAM_BASE 0x30000000UL
 #define PCI_PIO_BASE 0x03000000UL
@@ -87,9 +87,7 @@ void
 uart_putc(char byte)
 {
 	volatile uint8_t *uart0 = (volatile uint8_t *)UART0_BASE;
-	while ((uart0[UART_LSR] & UART_LSR_THRE) == 0) {
-		;
-	}
+	while ((uart0[UART_LSR] & UART_LSR_THRE) == 0);
 	uart0[UART_THR] = byte;
 }
 
@@ -99,9 +97,7 @@ uart_putc_net(char byte)
 	if (uart1_base == NULL) {
 		return;
 	}
-	while ((uart1_base[UART_LSR] & UART_LSR_THRE) == 0) {
-		;
-	}
+	while ((uart1_base[UART_LSR] & UART_LSR_THRE) == 0)
 	uart1_base[UART_THR] = byte;
 }
 

@@ -21,6 +21,9 @@ misc/net/**/proxy_out.txt
 misc/rtos/**/*.o
 misc/rtos/**/*.elf
 misc/rtos/**/qemu_out.txt
+misc/rtos/build/
+misc/rtos/**/shellcode.elf
+misc/rtos/**/shellcode.bin
 
 
 misc/net/**/test_*

@@ -10,6 +10,7 @@ extern NetworkInterface_t *pxFillInterfaceDescriptor(BaseType_t xEMACIndex, Netw
 
 #define MAGIC 0xDEADBEEF
 #define MAX_PACKET_SIZE 256
+#define PROXY_STACK_WORDS 1024
 
 struct proxy_header {
 	uint32_t magic;
@@ -20,13 +21,8 @@ struct proxy_header {
 
 volatile BaseType_t xNetworkUp = pdFALSE;
 
-void
-unlock_firmware(void)
-{
-	printf("========================= FIRMWARE UNLOCKED =========================\n");
-	// In a real RTOS, we might halt or reset here.
-	while(1);
-}
+StackType_t proxy_stack[PROXY_STACK_WORDS];
+static StaticTask_t proxy_task;
 
 void
 vProxyTask(void *pvParameters)
@@ -64,8 +60,9 @@ vProxyTask(void *pvParameters)
 		uint32_t xClientLength = sizeof(xClient);
 
 		// VULNERABILITY: Stack Buffer Overflow
-		// We allocate a fixed size buffer on the stack but tell recvfrom
-		// it can write up to 1024 bytes.
+		// The buffer is 256 bytes. recvfrom is allowed to write 1024.
+		// Nothing marks this stack non-executable, so a return into the
+		// buffer runs whatever bytes the packet left there.
 		char payload[MAX_PACKET_SIZE];
 
 		int32_t lBytes = FreeRTOS_recvfrom(xSocket, payload, 1024, 0, &xClient, &xClientLength);
@@ -137,7 +134,7 @@ main(void)
 	printf("[*] IP stack started.\n");
 
 	printf("[*] Creating proxy task...\n");
-	xTaskCreate(vProxyTask, "ProxyTask", 1024, NULL, 1, NULL);
+	xTaskCreateStatic(vProxyTask, "ProxyTask", PROXY_STACK_WORDS, NULL, 1, proxy_stack, &proxy_task);
 	printf("[*] Proxy task created.\n");
 
 	printf("[*] Starting scheduler...\n");
