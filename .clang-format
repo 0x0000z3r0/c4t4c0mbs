@@ -1,0 +1,13 @@
+---
+BasedOnStyle: LLVM
+IndentWidth: 8
+TabWidth: 8
+UseTab: Always
+BreakBeforeBraces: Linux
+AllowShortIfStatementsOnASingleLine: false
+IndentCaseLabels: false
+ColumnLimit: 0
+AlignTrailingComments: true
+SpacesBeforeTrailingComments: 2
+AlwaysBreakAfterDefinitionReturnType: All
+InsertBraces: true
