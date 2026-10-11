@@ -5,7 +5,6 @@ This module walks through common RTOS security flaws. Shared startup, UART, and 
 ## Dependencies
 
 ```
-sudo apt-get update
 sudo apt-get install -y gcc-riscv64-unknown-elf qemu-system-misc picolibc-riscv64-unknown-elf cmake
 pip install pwntools scapy
 ```
@@ -13,7 +12,6 @@ pip install pwntools scapy
 ## Build
 
 ```bash
-cd misc/rtos
 cmake -S . -B build
 cmake --build build
 ```
