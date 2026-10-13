@@ -4,8 +4,19 @@ This module walks through common RTOS security flaws. Shared startup, UART, and 
 
 ## Dependencies
 
+The `cata-build` image already has the FreeRTOS toolchain: `gcc-riscv64-unknown-elf`, `binutils-riscv64-unknown-elf` (`riscv64-unknown-elf-objdump`), `picolibc-riscv64-unknown-elf`, `qemu-system-misc`, `cmake`, `gdb`, and `pwndbg`.
+
+From the repository root:
+
+```bash
+docker build -t cata-build .
+docker run --rm -it --name labs -v "$PWD":/labs -w /labs/misc/rtos cata-build
 ```
-sudo apt-get install -y gcc-riscv64-unknown-elf qemu-system-misc picolibc-riscv64-unknown-elf cmake
+
+The same packages, if you are already on Ubuntu 22.04 and are not using the image:
+
+```
+sudo apt-get install -y gcc-riscv64-unknown-elf binutils-riscv64-unknown-elf qemu-system-misc picolibc-riscv64-unknown-elf cmake
 pip install pwntools scapy
 ```
 

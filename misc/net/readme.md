@@ -2,7 +2,7 @@
 
 This is a progression designed to teach network exploitation and secure C programming, focusing on a custom UDP-based packet proxy.
 
-## Protocol Header
+## Protocol
 
 The victim program in each lab is `proxy.c`. It acts as a UDP-based packet proxy that receives custom encapsulated packets, parses them, and processes their contents.
 
@@ -17,10 +17,22 @@ struct proxy_header {
 
 ## Dependencies
 
+Build the labs in Ubuntu 22.04. Several `exploit.py` files hardcode stack and heap offsets from GCC 11. Ubuntu 24's GCC lays those frames out differently, so a host build there will not match the scripts.
+
+From the repository root:
+
 ```shell
-sudo apt-get install -y build-essential libssl-dev openssl
-pip install pwntools scapy
+docker build -t cata-build .
+docker run --rm -it --name labs -v "$PWD":/labs -w /labs/misc/net cata-build
 ```
+
+A second shell joins the same container, so both ends of the tunnel share `127.0.0.1`:
+
+```shell
+docker exec -it labs bash
+```
+
+Inside the container, `make` uses that image's GCC. The image already has `build-essential`, `libssl-dev`, `pwntools`, `scapy`, `objdump`, `tshark`, `tmux`, `gdb`, and `pwndbg`.
 
 Labs with OpenSSL are more realistic. The program is a UDP tunnel:
 

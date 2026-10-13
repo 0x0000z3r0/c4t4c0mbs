@@ -1,10 +1,25 @@
 # System Security
 
-This workshop assumes an x86-64 Ubuntu/Debian environment.
+This workshop assumes x86-64 Ubuntu 22.04. Several `exploit.py` files hardcode stack offsets from GCC 11. Ubuntu 24's GCC lays those frames out differently, so a host build there will not match the scripts.
+
+From the repository root:
+
+```bash
+docker build -t cata-build .
+docker run --rm -it --name labs -v "$PWD":/labs -w /labs/misc/sys cata-build
+```
+
+A second shell joins the same container:
+
+```bash
+docker exec -it labs bash
+```
+
+Inside the container, `make` uses that image's GCC. The image already has `gcc`, `make`, `gdb`, `pwndbg`, `binutils` (`objdump`), `checksec`, `pwntools`, `tshark`, and `tmux`.
 
 ## Dependencies
 
-Install the required tools:
+The same packages, if you are already on Ubuntu 22.04 and are not using the image:
 
 ```bash
 sudo apt update
